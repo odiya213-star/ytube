@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정보시스템감리사 비디오 허브 | InfoSys Auditor Hub</title>
+  <meta name="description" content="정보시스템감리사 시험 준비, 합격 후기, 기출 해설, 감리 실무 핵심 강의를 한눈에 볼 수 있는 유튜브 영상 허브">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo-group">
+        <div class="logo-icon">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">IS-AUDIT<span class="highlight">HUB</span></span>
+          <span class="logo-sub">정보시스템감리사 비디오 아카이브</span>
+        </div>
+      </div>
+
+      <!-- Search & Custom Add Bar -->
+      <div class="search-wrapper">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="searchInput" placeholder="강의 제목, 키워드, 채널명 검색... (예: 데이터베이스, 합격수기)" autocomplete="off">
+        <button id="clearSearchBtn" class="clear-btn" title="검색어 지우기" style="display: none;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="nav-actions">
+        <button id="addVideoBtn" class="action-btn primary-btn">
+          <i data-lucide="plus-circle"></i>
+          <span>영상 추가</span>
+        </button>
+        <button id="youtubeDirectBtn" class="action-btn secondary-btn" title="유튜브에서 직접 실시간 검색">
+          <i data-lucide="external-link"></i>
+          <span>YouTube 검색</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i data-lucide="award"></i> 대한민국 최고 권위 IT 감리 자격증
+      </div>
+      <h1 class="hero-title">
+        <span class="gradient-text">정보시스템감리사</span> 핵심 학습 & 실무 영상
+      </h1>
+      <p class="hero-desc">
+        감리및사업관리, 소프트웨어공학, 데이터베이스, 시스템구조, 보안 5개 핵심 과목부터<br>
+        현직 감리사들의 합격 비법 및 실무 가이드 영상을 맞춤형으로 탐색해 보세요.
+      </p>
+
+      <!-- Stats Bar -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="stat-num" id="totalCount">0</span>
+          <span class="stat-label">등록된 영상</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="categoryCount">6</span>
+          <span class="stat-label">학습 카테고리</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="favCount">0</span>
+          <span class="stat-label">즐겨찾기 보관함</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    <!-- Category Tabs -->
+    <div class="filter-bar">
+      <div class="categories" id="categoryContainer">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="sort-wrapper">
+        <select id="sortSelect" class="sort-select">
+          <option value="recommended">추천순</option>
+          <option value="newest">최신순</option>
+          <option value="views">인기순 (조회수)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Video Grid Section -->
+    <section class="video-section">
+      <div class="section-header">
+        <div class="result-count">
+          <span id="activeCategoryTitle">전체 영상</span>
+          <span class="badge-count" id="filteredCount">0</span>
+        </div>
+        <div class="view-toggles">
+          <button class="filter-pill" id="onlyFavoritesBtn">
+            <i data-lucide="bookmark"></i> 즐겨찾기만 보기
+          </button>
+        </div>
+      </div>
+
+      <!-- Video Grid List -->
+      <div class="video-grid" id="videoGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <i data-lucide="video-off" class="empty-icon"></i>
+        <h3>일치하는 영상이 없습니다</h3>
+        <p>다른 검색어나 카테고리를 선택하거나, 상단의 [영상 추가] 버튼으로 새로운 영상을 등록해 보세요.</p>
+        <button id="resetFilterBtn" class="action-btn secondary-btn">검색 필터 초기화</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Video Player Modal -->
+  <div class="modal-backdrop" id="playerModal">
+    <div class="modal-box modal-player">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-category-badge" id="modalCategoryBadge">카테고리</span>
+          <h3 id="modalVideoTitle">영상 제목</h3>
+        </div>
+        <button class="modal-close" id="closePlayerBtn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="player-iframe-container" id="playerIframeContainer">
+        <!-- Iframe injected dynamically -->
+      </div>
+      <div class="modal-footer">
+        <div class="modal-channel-info">
+          <i data-lucide="user-check"></i>
+          <span id="modalChannelName">채널명</span>
+          <span class="dot">·</span>
+          <span id="modalVideoDate">등록일</span>
+        </div>
+        <div class="modal-actions">
+          <button class="action-btn secondary-btn" id="modalFavBtn">
+            <i data-lucide="bookmark" id="modalFavIcon"></i>
+            <span id="modalFavText">즐겨찾기 추가</span>
+          </button>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="action-btn primary-btn" id="modalWatchOnYoutube">
+            <i data-lucide="external-link"></i>
+            YouTube에서 직접 보기
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Video Modal -->
+  <div class="modal-backdrop" id="addVideoModal">
+    <div class="modal-box modal-form">
+      <div class="modal-header">
+        <h3><i data-lucide="video"></i> 새로운 감리사 영상 추가</h3>
+        <button class="modal-close" id="closeAddModalBtn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="addVideoForm" class="custom-form">
+        <div class="form-group">
+          <label for="newVideoUrl">YouTube 영상 URL 또는 영상 ID <span class="required">*</span></label>
+          <input type="text" id="newVideoUrl" placeholder="https://www.youtube.com/watch?v=... 또는 youtu.be/..." required>
+          <p class="form-hint">YouTube 영상 주소를 붙여넣으면 썸네일과 영상 ID를 자동 인식합니다.</p>
+        </div>
+        <div class="form-group">
+          <label for="newVideoTitle">강의 / 영상 제목 <span class="required">*</span></label>
+          <input type="text" id="newVideoTitle" placeholder="예: [2025 대비] 감리및사업관리 핵심 포인트 특강" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="newVideoChannel">채널명 / 강사명 <span class="required">*</span></label>
+            <input type="text" id="newVideoChannel" placeholder="예: IT기술사회, 에듀에어" required>
+          </div>
+          <div class="form-group half">
+            <label for="newVideoCategory">과목 / 분류 <span class="required">*</span></label>
+            <select id="newVideoCategory" required>
+              <option value="guide">합격수기 & 수험전략</option>
+              <option value="audit">감리 및 사업관리</option>
+              <option value="se">소프트웨어공학</option>
+              <option value="db">데이터베이스</option>
+              <option value="system">시스템구조 및 네트워크</option>
+              <option value="security">보안 및 최신동향</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newVideoDesc">영상 간단 설명 및 핵심 키워드</label>
+          <textarea id="newVideoDesc" rows="3" placeholder="영상의 핵심 내용이나 다루는 주제 키워드를 적어주세요."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="action-btn secondary-btn" id="cancelAddBtn">취소</button>
+          <button type="submit" class="action-btn primary-btn">
+            <i data-lucide="check"></i> 영상 등록하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <p><strong>정보시스템감리사 비디오 허브 (IS-AUDIT HUB)</strong></p>
+        <p class="footer-sub">정보시스템감리사 자격 취득 및 IT 감리 역량 강화를 위한 오픈 비디오 큐레이션 플랫폼</p>
+      </div>
+      <div class="footer-right">
+        <p class="disclaimer">본 서비스에서 제공되는 모든 영상의 저작권은 각 원작자 및 YouTube 채널에 있습니다.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
