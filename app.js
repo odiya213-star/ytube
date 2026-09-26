@@ -312,12 +312,17 @@ function openPlayer(video) {
 
   updateModalFavButton(video.id);
 
-  // Embed iframe with autoplay
+  // YouTube Embed URL with origin and referrerpolicy to prevent Error 153
+  const currentOrigin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'https://www.youtube.com';
+  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}`;
+
+  // Embed iframe with autoplay & referrerpolicy
   playerIframeContainer.innerHTML = `
     <iframe 
-      src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1" 
+      src="${embedUrl}" 
       title="${video.title}" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
       allowfullscreen>
     </iframe>
   `;
