@@ -7,9 +7,9 @@ let onlyFavorites = false;
 let favorites = new Set();
 let activePlayingVideo = null;
 
-// LocalStorage Keys
-const STORAGE_VIDEOS_KEY = 'is_audit_videos_v1';
-const STORAGE_FAVS_KEY = 'is_audit_favs_v1';
+// LocalStorage Keys (bumped to v2 for verified video IDs)
+const STORAGE_VIDEOS_KEY = 'is_audit_videos_v2';
+const STORAGE_FAVS_KEY = 'is_audit_favs_v2';
 
 // DOM Elements
 const videoGrid = document.getElementById('videoGrid');
@@ -233,7 +233,7 @@ function renderVideoCards(videoList) {
         <button class="fav-card-btn ${isFav ? 'favorited' : ''}" data-video-id="${video.id}" title="${isFav ? '즐겨찾기 해제' : '즐겨찾기 저장'}">
           <i data-lucide="bookmark"></i>
         </button>
-        <img class="thumbnail-img" src="${thumbUrl}" alt="${video.title}" loading="lazy">
+        <img class="thumbnail-img" src="${thumbUrl}" alt="${video.title}" loading="lazy" onerror="if(!this.dataset.triedMq){this.dataset.triedMq=1;this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg';}else{this.src='https://via.placeholder.com/640x360/1e293b/94a3b8?text='+encodeURIComponent(this.alt);}">
         <div class="play-overlay">
           <div class="play-btn-circle">
             <i data-lucide="play" style="fill: white; margin-left: 3px;"></i>
